@@ -1,19 +1,19 @@
 let modInfo = {
-	name: "The ??? Tree",
-	author: "nobody",
-	pointsName: "points",
+	name: "The Modern Stacker Tree",
+	author: "Conglomeration",
+	pointsName: "tetriminoes",
 	modFiles: ["layers.js", "tree.js"],
 
 	discordName: "",
 	discordLink: "",
-	initialStartPoints: new Decimal (10), // Used for hard resets and new players
+	initialStartPoints: new Decimal (0), // Used for hard resets and new players
 	offlineLimit: 1,  // In hours
 }
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.0",
-	name: "Literally nothing",
+	num: "0.1",
+	name: "DX (1998)",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
@@ -41,7 +41,11 @@ function getPointGen() {
 	if(!canGenPoints())
 		return new Decimal(0)
 
-	let gain = new Decimal(1)
+	let gain = new Decimal(0.65)
+
+	if (hasUpgrade('t', 11)) gain = gain.times(1.05)
+	if (hasUpgrade('t', 12)) gain = gain.times(1.15)
+
 	return gain
 }
 
