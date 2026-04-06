@@ -25,6 +25,18 @@ addLayer("t", {
         {key: "p", description: "P: Reset for prestige points", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
 
+
+    doReset(resettingLayer) {
+        let keep = [];
+        //have any conditions here such as hasMilestone and keep.push("thing") to keep all of a single feature, such as "upgrades"
+        keep.push("upgrades")
+        
+        if (layers[resettingLayer].row > this.row) { 
+            layerDataReset(this.layer, keep);
+        }
+        //anything u place here is for keeping specific things, like if(hasUpgrade('x',99))player.y.upgrades.push(11) if that makes sense
+    },
+
     upgrades: {
         11: {
             title: "Doubles",
@@ -57,15 +69,29 @@ addLayer("g", {
     exponent: 1.0, // Prestige currency exponent
     gainMult() { // Calculate the multiplier for main currency from bonuses
         mult = new Decimal(1)
+        if (hasUpgrade('g', 11)) mult = mult.times(upgradeEffect('g', 11))
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
         return new Decimal(1)
     },
-    row: 0, // Row the layer is in on the tree (0 is the first row)
+    row: 1, // Row the layer is in on the tree (0 is the first row)
+    displayRow: 0,
     hotkeys: [
         {key: "p", description: "P: Reset for prestige points", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
+
+    upgrades: {
+        11: {
+            title: "Improvement",
+            description: "Learn from your previous games (1% boost per game)",
+            cost: new Decimal(1),
+            effect() {
+                return player[this.layer].points.add(1).pow(0.01)
+            },
+            effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }, // Add formatting to the effect
+        }
+    },
 
     layerShown(){return true}
 })
