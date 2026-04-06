@@ -42,10 +42,15 @@ function getPointGen() {
 
 	let gain = new Decimal(0.65)
 
+	if (!hasUpgrade('t', 21) && hasUpgrade('t', 12) &&  hasUpgrade('t', 11)  && player.points.gte(24)) gain = new Decimal(0)
+	if (!hasUpgrade('t', 21) && hasUpgrade('t', 11) &&  !hasUpgrade('t', 11) && player.points.gte(12)) gain = new Decimal(0)
+	if (!hasUpgrade('t', 21) && !hasUpgrade('t', 11) && !hasUpgrade('t', 12) && player.points.gte(6))  gain = new Decimal(0)
+
 	if (hasUpgrade('t', 11)) gain = gain.times(1.05)
 	if (hasUpgrade('t', 12)) gain = gain.times(1.15)
 
 	if (hasUpgrade('g', 11)) gain = gain.times(upgradeEffect('g', 11))
+	if (hasUpgrade('g', 12)) gain = gain.times(upgradeEffect('g', 12))
 
 	return gain
 }

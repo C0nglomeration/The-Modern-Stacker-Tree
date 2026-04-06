@@ -25,6 +25,7 @@ addLayer("t", {
         {key: "p", description: "P: Reset for prestige points", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
 
+    
 
     doReset(resettingLayer) {
         let keep = [];
@@ -40,13 +41,18 @@ addLayer("t", {
     upgrades: {
         11: {
             title: "Doubles",
-            description: "Learn how to clear doubles (5% boost)",
+            description: "Learn how to clear doubles (5% boost, raise hardcap by 6)",
             cost: new Decimal(4),
         },
         12: {
             title: "Quads",
-            description: "Learn how to clear quads (15% boost)",
+            description: "Learn how to clear quads (15% boost, raise hardcap by 12)",
             cost: new Decimal(8),
+        },
+        21: {
+            title: "Clean Stacking",
+            description: "Learn how to setup quads (remove hardcap)",
+            cost: new Decimal(40),
         },
     },
     layerShown(){return true}
@@ -83,13 +89,23 @@ addLayer("g", {
 
     upgrades: {
         11: {
-            title: "Improvement",
+            title: "Intuition",
             description: "Learn from your previous games (1% boost per game)",
             cost: new Decimal(1),
             effect() {
-                return player[this.layer].points.add(1).pow(0.01)
+                return player[this.layer].points.times(0.01).add(1)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }, // Add formatting to the effect
+            pay() {new Decimal(0)}
+        },
+        12: {
+            title: "Studying",
+            description: "Record your past games and study them in your free time (placed tetriminoes boost logarithmically)",
+            cost: new Decimal(4),
+            effect: () => Decimal.max(Decimal.log(player.points.add(19), 20), 1),
+            effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" },
+
+            pay() {new Decimal(0)}
         }
     },
 
